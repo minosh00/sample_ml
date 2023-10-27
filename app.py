@@ -2,11 +2,19 @@ from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
 import random
+import pickle
+import cloudpickle
+import dill
 
 app = Flask(__name__)
 
-# Load the pre-trained model
-model_gbc = joblib.load('demand.pkl')
+# Custom unpickler to load the model
+def custom_unpickler(file):
+    return joblib.load(file)
+
+# Load the pre-trained model using the custom unpickler
+with open('demand.pkl', 'rb') as file:
+    model_gbc = custom_unpickler(file)
 
 # Define ranges for each class label
 class_ranges = {
@@ -25,7 +33,7 @@ def predict():
         data = request.json
         input_hash = hash(str(data))  # Create a unique hash for the input data
 
-        # Check if random value is already generated for this input
+        # Check if a random value is already generated for this input
         if input_hash in random_values:
             random_prediction = random_values[input_hash]
         else:
