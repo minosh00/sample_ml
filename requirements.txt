@@ -4,3 +4,4 @@ pandas==1.3.3
 joblib==1.0.1
 cloudpickle==2.0.0  # Add the required version for cloudpickle
 
+dill==0.3.4 
